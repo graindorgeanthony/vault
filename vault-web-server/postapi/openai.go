@@ -180,8 +180,10 @@ func min(a, b int) int {
 
 func buildPrompt(contexts []string, question string) (string, error) {
 	tokenLimit := 3750
-	promptStart := "Answer the question based on the context below.\n\nContext:\n"
-	promptEnd := fmt.Sprintf("\n\nQuestion: %s\nAnswer:", question)
+	//promptStart := "Use the following pieces of context to answer the question at the end.\nIf you don't know the answer, just say that you don't know, don't try to make up an answer.\n\nContext:\n"
+	//promptEnd := fmt.Sprintf("\n\nQuestion: %s\nAnswer:", question)
+	promptStart := "Utilise les éléments de contexte suivants pour répondre à la question.\nSi tu ne connais pas la réponse, dis simplement que tu ne sais pas, n'essaye pas d'inventer une réponse.\n\nContexte :\n"
+	promptEnd := fmt.Sprintf("\n\nQuestion : %s\nRéponse :", question)
 
 	// Get tiktoken encoding for the model
 	tke, err := tiktoken.EncodingForModel("davinci")
@@ -200,10 +202,12 @@ func buildPrompt(contexts []string, question string) (string, error) {
 		currentTokenCount += len(contextTokens)
 
 		if currentTokenCount >= tokenLimit {
-			prompt = promptStart + strings.Join(contexts[:i], "\n\n---\n\n") + promptEnd
+			prompt = promptStart + strings.Join(contexts[:i], "\n") + promptEnd
+			//prompt = promptStart + strings.Join(contexts[:i], "\n\n---\n\n") + promptEnd
 			break
 		} else if i == len(contexts)-1 {
-			prompt = promptStart + strings.Join(contexts, "\n\n---\n\n") + promptEnd
+			prompt = promptStart + strings.Join(contexts, "\n") + promptEnd
+			//prompt = promptStart + strings.Join(contexts, "\n\n---\n\n") + promptEnd
 		}
 	}
 

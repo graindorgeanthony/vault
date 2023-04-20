@@ -55,6 +55,7 @@ const ResponseDisplay = ({ response }) => {
 
 const LandingPage = (props: Props): React.Node => {
     const [question, setQuestion] = useState('');
+    const [environment, setSelectedEnvironment] = useState('AI');
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [failedFiles, setFailedFiles] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
@@ -77,7 +78,7 @@ const LandingPage = (props: Props): React.Node => {
         console.log('Asking question:', question);
 
         PostAPI.questions
-            .submitQuestion(question, 'GPT Turbo')
+            .submitQuestion(question, 'GPT Turbo', environment)
             .promise.then((response) => {
                 console.log('Response:', response);
                 setResponse(response);
@@ -114,7 +115,7 @@ const LandingPage = (props: Props): React.Node => {
         setLoading(true);
 
         PostAPI.upload
-            .uploadFiles(files)
+            .uploadFiles(files, environment)
             .promise.then((response) => {
                 console.log('Response:', response);
                 setUploadedFiles(response.successful_file_names ?? []);
@@ -153,7 +154,7 @@ const LandingPage = (props: Props): React.Node => {
             contentPreferredWidth={1300}
             contentClass={s.pageContent}>
             <div className={s.text}>
-                <h1>The "OP" Golang Question-Answering Stack</h1>
+                <h1>Okuden's Knowledge Base</h1>
                 {errorMessage && <div className={s.error}>{errorMessage}</div>}
                 <div className={s.workArea}>
                     <div className={s.leftColumn}>
@@ -177,6 +178,16 @@ const LandingPage = (props: Props): React.Node => {
                                 onChange={(e) => setQuestion(e.target.value)}
                                 placeholder="Enter your question here..."
                             />
+                            <select
+                                value={environment}
+                                onChange={(e) => setSelectedEnvironment(e.target.value)}
+                            >
+                                <option value="AI">Artificial Intelligence</option>
+                                <option value="BS">Behavioral Science</option>
+                                <option value="LEGIFRANCE">Legifrance</option>
+                                <option value="CMA">CMA CGM</option>
+                                <option value="ANTHONY">Anthony</option>
+                            </select>
                             <button
                                 onClick={handleAskQuestion}
                                 disabled={loading || !question}

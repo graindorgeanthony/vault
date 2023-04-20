@@ -23,8 +23,8 @@ type UploadResponse struct {
 	FailedFileNames     map[string]string `json:"failed_file_names"`
 }
 
-const MAX_FILE_SIZE int64 = 3 << 20         // 3 MB
-const MAX_TOTAL_UPLOAD_SIZE int64 = 3 << 20 // 3 MB
+const MAX_FILE_SIZE int64 = 500 << 20         // 3 MB
+const MAX_TOTAL_UPLOAD_SIZE int64 = 500 << 20 // 3 MB
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -119,7 +119,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		// Process the fileBytes into embeddings and store in Pinecone here
 		chunks := CreateChunks(fileContent, 20, 4, fileName)
 
-		embeddings, err := getEmbeddings(clientToUse, chunks, 100, openai.AdaEmbeddingV2)
+		embeddings, err := getEmbeddings(clientToUse, chunks, 75, openai.AdaEmbeddingV2)
 		if err != nil {
 			errMsg := fmt.Sprintf("Error getting embeddings: %v", err)
 			log.Println("[UploadHandler ERR]", errMsg)

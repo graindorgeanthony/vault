@@ -31,7 +31,7 @@ import TimedLocalStorage from './TimedLocalStorage';
 const API_TIMEOUT = 1000 * 60 * 10; // 10 min in ms
 
 const questions = {
-    submitQuestion: (question: string, model: string): Promise<any> => {
+    submitQuestion: (question: string, model: string, environment: string): Promise<any> => {
         const resultPromise = new Promise((resolve: any, reject: any) => {
             var data = new FormData();
             data.append('question', question);
@@ -39,7 +39,7 @@ const questions = {
             data.append('apikey', getCustomOpenAPIKey());
 
             const uuid = getOrCreateUUID(); // <-- Generate a UUID
-            data.append('uuid', uuid); // <-- Append the UUID to the FormData object
+            data.append('uuid', environment); // <-- Append the UUID to the FormData object
 
             const timeoutID = setTimeout(
                 function () {
@@ -93,7 +93,7 @@ const questions = {
 };
 
 const upload = {
-    uploadFiles: (files: Array<File>): Promise<any> => {
+    uploadFiles: (files: Array<File>, environment: string): Promise<any> => {
         const resultPromise = new Promise((resolve: any, reject: any) => {
             var data = new FormData();
             files.forEach((file) => {
@@ -103,7 +103,7 @@ const upload = {
 
             // Generate a UUID and append it to the FormData object
             const uuid = getOrCreateUUID(); // <-- Generate a UUID
-            data.append('uuid', uuid); // <-- Append the UUID to the FormData object
+            data.append('uuid', environment); // <-- Append the UUID to the FormData object
 
             console.log('[/upload] Added uuid:', { uuid });
 

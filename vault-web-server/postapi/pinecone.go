@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"io/ioutil"
 	"log"
 	"math"
@@ -19,6 +20,12 @@ type PineconeVector struct {
 	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
+func generateCode(input string) uint64 {
+	h := fnv.New64a()
+	h.Write([]byte(input))
+	return h.Sum64()
+}
+
 func upsertEmbeddingsToPinecone(embeddings [][]float32, chunks []Chunk, uuid string) error {
 	// Prepare URL
 	url := PINECONE_API_ENDPOINT + "/vectors/upsert"
@@ -27,8 +34,9 @@ func upsertEmbeddingsToPinecone(embeddings [][]float32, chunks []Chunk, uuid str
 	vectors := make([]PineconeVector, len(embeddings))
 	for i, embedding := range embeddings {
 		chunk := chunks[i]
+		num := generateCode(chunk.Title)
 		vectors[i] = PineconeVector{
-			ID:     fmt.Sprintf("id-%d", i),
+			ID:     fmt.Sprintf("id-%d-%s", i, num),
 			Values: embedding,
 			Metadata: map[string]string{
 				"file_name": chunk.Title,

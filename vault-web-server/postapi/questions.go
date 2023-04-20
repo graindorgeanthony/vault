@@ -85,7 +85,7 @@ func QuestionHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[QuestionHandler] Sending OpenAI api request...\nPrompt:%s\n", prompt)
 	openAIResponse, tokens, err := callOpenAI(clientToUse, prompt, model,
-		"You are a helpful assistant answering questions based on the context provided.",
+		"",
 		512)
 
 	if err != nil {
