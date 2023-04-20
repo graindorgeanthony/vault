@@ -1,6 +1,6 @@
 module github.com/pashpashpash/vault
 
-go 1.17
+go 1.20
 
 require (
 	code.sajari.com/docconv v1.3.5
